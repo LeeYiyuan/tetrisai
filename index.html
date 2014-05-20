@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Tetris AI</title>
+    <link href="style/main.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+    <h1 class="header">Tetris AI</h1>
+
+    <div class="game-container">
+        <canvas width="200px" height="400px" id="grid-canvas" class="grid"></canvas>
+        <div class="controls-container">
+            <div class="score-container">9999</div>
+            <a class="start-ai-button">Run AI</a>
+            <a class="reset-button">Reset</a>
+        </div>
+    </div>
+    <hr>
+    <div class="footer">
+        <p>Created by <a href="http://codemyroad.wordpress.com">Lee Yiyuan</a>. The quick brown fox jumps over the lazy dog.</p>
+    </div>
+</div>
+
+
+<script src="js/grid.js"></script>
+<script src="js/actuator.js"></script>
+<script src="js/piece.js"></script>
+<script src="js/game_manager.js"></script>
+<script>
+    var manager = new GameManager();
+    manager.actuate();
+
+</script>
+</body>
+</html>
