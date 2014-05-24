@@ -1,3 +1,4 @@
+// Constructor
 function Grid(rows, columns){
     this.rows = rows;
     this.columns = columns;
@@ -11,6 +12,7 @@ function Grid(rows, columns){
     }
 };
 
+// Methods
 Grid.prototype.clone = function(){
     var _grid = new Grid(this.rows, this.columns);
     for (var r = 0; r < this.rows; r++) {
@@ -21,62 +23,128 @@ Grid.prototype.clone = function(){
     return _grid;
 };
 
-Grid.prototype.canFall = function(piece){
-    for(var r = piece.cells.length - 1; r >= 0; r--){
-        for(var c = 0; c < piece.cells.length; c++){
-            if (piece.cells[r][c] == 1) {
-                if (piece.row + r + 1 >= this.rows || this.cells[piece.row + r + 1][piece.column + c] == 1){
-                    return false;
-                }
+Grid.prototype.clearLines = function(){
+    var distance = 0;
+    var row = new Array(this.columns);
+    for(var r = this.rows - 1; r >= 0; r--){
+        if (this.isLine(r)){
+            distance++;
+            for(var c = 0; c < this.columns; c++){
+                this.cells[r][c] = 0;
             }
+        }else if (distance > 0){
+            for(var c = 0; c < this.columns; c++){
+                this.cells[r + distance][c] = this.cells[r][c];
+                this.cells[r][c] = 0;
+            }
+        }
+    }
+    return distance;
+};
+
+// Computations
+Grid.prototype.isLine = function(row){
+    for(var c = 0; c < this.columns; c++){
+        if (this.cells[row][c] == 0){
+            return false;
         }
     }
     return true;
+};
+
+Grid.prototype.isEmptyRow = function(row){
+    for(var c = 0; c < this.columns; c++){
+        if (this.cells[row][c] == 1){
+            return false;
+        }
+    }
+    return true;
+};
+
+Grid.prototype.exceeded = function(){
+    return !this.isEmptyRow(0) || !this.isEmptyRow(1);
+};
+
+Grid.prototype.height = function(){
+    var r = 0;
+    for(; r < this.rows && this.isEmptyRow(r); r++);
+    return this.rows - r;
+};
+
+Grid.prototype.lines = function(){
+    var count = 0;
+    for(var r = 0; r < this.rows; r++){
+        if (this.isLine(r)){
+            count++;
+        }
+    }
+    return count;
+};
+
+Grid.prototype.holes = function(){
+    var count = 0;
+    for(var c = 0; c < this.columns; c++){
+        var block = false;
+        for(var r = 0; r < this.rows; r++){
+            if (this.cells[r][c] == 1) {
+                block = true;
+            }else if (this.cells[r][c] == 0 && block){
+                count++;
+            }
+        }
+    }
+    return count;
+};
+
+Grid.prototype.blockades = function(){
+    var count = 0;
+    for(var c = 0; c < this.columns; c++){
+        var hole = false;
+        for(var r = this.rows - 1; r >= 0; r--){
+            if (this.cells[r][c] == 0){
+                hole = true;
+            }else if (this.cells[r][c] == 1 && hole){
+                count++;
+            }
+        }
+    }
+    return count;
 }
 
-/*
-Grid.prototype.applyGravity = function(maxDistance){
-    if (maxDistance == null){
-        maxDistance = this.rows - 1;
+Grid.prototype.aggregateHeight = function(){
+    var total = 0;
+    for(var c = 0; c < this.columns; c++){
+        total += this.columnHeight(c);
     }
-
-    var distance = maxDistance;
-    var fixed = false;
-    for(var r = this.rows - 1; r >= 0; r--){
-        for(var c = 0; c < this.columns; c++){
-            if (this.isFree(r, c)) {
-                var d = 0;
-                for (; d < maxDistance && r + d + 1 < this.rows && !this.isFixed(r + d + 1, c); d++);
-                if (r + d + 1 >= this.rows || this.isFixed(r + d + 1, c)){
-                    fixed = true;
-                }
-                if (d < distance) {
-                    distance = d;
-                }
-            }
-        }
-    }
-
-    if (distance == 0){
-        return 0;
-    }
-
-    for(var r = this.rows - 1; r >= 0; r--){
-        for(var c = 0; c < this.columns; c++) {
-            if (this.isFree(r, c)) {
-                this.setEmpty(r, c);
-                if (fixed){
-                    this.setFixed(r + distance, c);
-                }else{
-                    this.setFree(r + distance, c);
-                }
-            }
-        }
-    }
-
-    return distance;
+    return total;
 };
-*/
+
+Grid.prototype.bumpiness = function(){
+    var total = 0;
+    for(var c = 0; c < this.columns - 1; c++){
+        total += Math.abs(this.columnHeight(c) - this.columnHeight(c+ 1));
+    }
+    return total;
+}
+
+Grid.prototype.columnHeight = function(column){
+    var r = 0;
+    for(; r < this.rows && this.cells[r][column] == 0; r++);
+    return this.rows - r;
+};
+
+// Piece
+Grid.prototype.addPiece = function(piece) {
+    for(var r = 0; r < piece.cells.length; r++) {
+        for (var c = 0; c < piece.cells[r].length; c++) {
+            var _r = piece.row + r;
+            var _c = piece.column + c;
+            if (piece.cells[r][c] == 1 && _r >= 0){
+                this.cells[_r][_c] = 1;
+            }
+        }
+    }
+};
 
 Grid.prototype.valid = function(piece){
     for(var r = 0; r < piece.cells.length; r++){
@@ -84,7 +152,7 @@ Grid.prototype.valid = function(piece){
             var _r = piece.row + r;
             var _c = piece.column + c;
             if (piece.cells[r][c] == 1){
-                if (!(_c >= 0 && _c < this.columns && _r < this.rows && _r >= 0 && this.cells[_r][_c] == 0)){
+                if (!(_c < this.columns && _r < this.rows && this.cells[_r][_c] == 0)){
                     return false;
                 }
             }
@@ -93,12 +161,93 @@ Grid.prototype.valid = function(piece){
     return true;
 };
 
-Grid.prototype.addPiece = function(piece){
-    for(var r = 0; r < piece.dimension; r++){
-        for(var c = 0; c < piece.dimension; c++){
-            if (piece.cells[r][c] == 1){
-                this.cells[piece.row + r][piece.column + c] = 1;
+Grid.prototype.canMoveDown = function(piece){
+    for(var r = 0; r < piece.cells.length; r++){
+        for(var c = 0; c < piece.cells[r].length; c++){
+            var _r = piece.row + r + 1;
+            var _c = piece.column + c;
+            if (piece.cells[r][c] == 1 && _r >= 0){
+                if (!(_r < this.rows && this.cells[_r][_c] == 0)){
+                    return false;
+                }
             }
         }
     }
+    return true;
+};
+
+Grid.prototype.canMoveLeft = function(piece){
+    for(var r = 0; r < piece.cells.length; r++){
+        for(var c = 0; c < piece.cells[r].length; c++){
+            var _r = piece.row + r;
+            var _c = piece.column + c - 1;
+            if (piece.cells[r][c] == 1){
+                if (!(_c >= 0 && this.cells[_r][_c] == 0)){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+};
+
+Grid.prototype.canMoveRight = function(piece){
+    for(var r = 0; r < piece.cells.length; r++){
+        for(var c = 0; c < piece.cells[r].length; c++){
+            var _r = piece.row + r;
+            var _c = piece.column + c + 1;
+            if (piece.cells[r][c] == 1){
+                if (!(_c >= 0 && this.cells[_r][_c] == 0)){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+};
+
+Grid.prototype.rotateOffset = function(piece){
+    var _piece = piece.clone();
+    _piece.rotate(1);
+    if (this.valid(_piece)) {
+        return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
+    }
+
+    // Kicking
+    var initialRow = _piece.row;
+    var initialCol = _piece.column;
+
+    for (var i = 0; i < _piece.dimension - 1; i++) {
+        _piece.column = initialCol + i;
+        if (this.valid(_piece)) {
+            return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
+        }
+
+        for (var j = 0; j < _piece.dimension - 1; j++) {
+            _piece.row = initialRow - j;
+            if (this.valid(_piece)) {
+                return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
+            }
+        }
+        _piece.row = initialRow;
+    }
+    _piece.column = initialCol;
+
+    for (var i = 0; i < _piece.dimension - 1; i++) {
+        _piece.column = initialCol - i;
+        if (this.valid(_piece)) {
+            return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
+        }
+
+        for (var j = 0; j < _piece.dimension - 1; j++) {
+            _piece.row = initialRow - j;
+            if (this.valid(_piece)) {
+                return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
+            }
+        }
+        _piece.row = initialRow;
+    }
+    _piece.column = initialCol;
+
+    return null;
 };

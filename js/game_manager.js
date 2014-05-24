@@ -1,127 +1,138 @@
 function GameManager(){
-    this.grid = new Grid(20, 10);
+    this.grid = new Grid(22, 10);
     this.actuator = new Actuator();
-    this.workingPiece = null;
+    this.rpg = new RandomPieceGenerator();
+    this.ai = new AI(0.0465458398684859,0.2214985086163506,0.9363426595530472,0.07156617472646758);
+    this.workingPieces = [this.rpg.nextPiece(), this.rpg.nextPiece(), this.rpg.nextPiece()];
+    this.workingPiece = this.workingPieces[0];
+
+    this.isOver = true;
+    this.score = 0;
 
     var self = this;
     document.addEventListener("keydown", function (event){
         switch(event.which){
+            case 32: //drop
+                self.drop();
+                self.actuate(self.grid, self.workingPiece);
+                break;
             case 40: //down
-                self.moveDown();
+                self.applyGravity();
+                self.actuate(self.grid, self.workingPiece);
                 break;
             case 37: //left
                 self.moveLeft();
+                self.actuate(self.grid, self.workingPiece);
                 break;
             case 39: //right
                 self.moveRight();
+                self.actuate(self.grid, self.workingPiece);
                 break;
             case 38: //up
                 self.rotate();
+                self.actuate(self.grid, self.workingPiece);
                 break;
         }
     });
-    this.randomWorkingPiece();
-    this.gravityLoop();
+    document.getElementById('reset-button').onclick = function(){
+        self.setup();
+    }
+
+    self.actuate(this.grid, this.workingPiece);
+    this.loop();
+    //window.requestAnimationFrame(function(timestamp){
+    //    self.doUpdate(timestamp);
+    //});
 };
 
-GameManager.prototype.randomWorkingPiece = function(){
-    this.workingPiece = new Piece(PieceCells[Math.floor((Math.random() * 7))]);
-    this.workingPiece.row = 0;
-    this.workingPiece.column = Math.floor((this.grid.columns - this.workingPiece.dimension) / 2);
-}
+GameManager.prototype.doUpdate = function(timestamp){
+    this.applyGravity();
+    this.actuate(this.grid, this.workingPiece);
+    var self = this;
+    window.requestAnimationFrame(function(timestamp){
+        self.doUpdate(timestamp);
+    });
+};
 
-GameManager.prototype.gravityLoop = function(){
+GameManager.prototype.loop = function(){
     var self = this;
     setTimeout(function(){
-        self.moveDown();
-        self.gravityLoop();
-    }, 800);
+        self.applyGravity();
+        self.actuate(self.grid, self.workingPiece);
+        self.loop();
+    }, 0);
+}
+
+GameManager.prototype.setup = function(){
+    this.grid = new Grid(22, 10);
+    this.score = 0;
+    this.isOver = false;
+    this.workingPiece = this.rpg.nextPiece();
+    this.actuate(this.grid, this.workingPiece);
 };
 
-GameManager.prototype.actuate = function(){
-    var _grid = this.grid.clone();
-    if (this.workingPiece != null) {
-        _grid.addPiece(this.workingPiece);
+GameManager.prototype.actuate = function(grid, workingPiece){
+    var _grid = grid.clone();
+    if (workingPiece != null) {
+        _grid.addPiece(workingPiece);
     }
     this.actuator.actuate(_grid);
+    document.getElementById("score-container").innerHTML = this.score.toString();
 };
 
-GameManager.prototype.moveDown = function(){
-    this.workingPiece.row++;
-    if (this.grid.valid(this.workingPiece)){
-        this.actuate();
-    }else {
-        this.workingPiece.row--;
-        this.grid.addPiece(this.workingPiece);
-        this.randomWorkingPiece();
-        this.actuate();
+GameManager.prototype.setWorkingPiece = function(){
+    this.grid.addPiece(this.workingPiece);
+    this.score += this.grid.clearLines();
+    if (!this.grid.exceeded()){
+        for(var i = 0; i < this.workingPieces.length - 1; i++){
+            this.workingPieces[i] = this.workingPieces[i + 1];
+        }
+        this.workingPieces[this.workingPieces.length - 1] = this.rpg.nextPiece();
+        this.workingPiece = this.workingPieces[0];
+        this.aiMove();
+    }else{
+        alert("Game over");
     }
+};
+
+GameManager.prototype.applyGravity = function(){
+    if (this.grid.canMoveDown(this.workingPiece)) {
+        this.workingPiece.row++;
+    }else{
+        this.setWorkingPiece();
+    }
+};
+
+GameManager.prototype.drop = function(){
+    while(this.grid.canMoveDown(this.workingPiece)){
+        this.workingPiece.row++;
+    }
+    this.setWorkingPiece();
 };
 
 GameManager.prototype.moveLeft = function(){
-    this.workingPiece.column--;
-    if (this.grid.valid(this.workingPiece)){
-        this.actuate();
-    }else{
-        this.workingPiece.column++;
-    }
-};
-
-GameManager.prototype.moveRight = function(){
-    this.workingPiece.column++;
-    if (this.grid.valid(this.workingPiece)){
-        this.actuate();
-    }else{
+    if (this.grid.canMoveLeft(this.workingPiece)){
         this.workingPiece.column--;
     }
 };
 
-GameManager.prototype.rotate = function(){
-    this.workingPiece.rotate(1);
-    if (this.grid.valid(this.workingPiece)){
-        this.actuate();
-        return;
+GameManager.prototype.moveRight = function(){
+    if (this.grid.canMoveRight(this.workingPiece)){
+        this.workingPiece.column++;
     }
-
-    var initialRow = this.workingPiece.row;
-    var initialCol = this.workingPiece.column;
-
-    for(var i =0; i < this.workingPiece.dimension - 1; i++){
-        this.workingPiece.column = initialCol + i;
-        if (this.grid.valid(this.workingPiece)) {
-            this.actuate();
-            return;
-        }
-
-        for(var j = 0; j < this.workingPiece.dimension - 1; j++){
-            this.workingPiece.row = initialRow - j;
-            if (this.grid.valid(this.workingPiece)) {
-                this.actuate();
-                return;
-            }
-        }
-        this.workingPiece.row = initialRow;
-    }
-    this.workingPiece.column = initialCol;
-
-    for(var i =0; i < this.workingPiece.dimension - 1; i++){
-        this.workingPiece.column = initialCol - i;
-        if (this.grid.valid(this.workingPiece)) {
-            this.actuate();
-            return;
-        }
-
-        for(var j = 0; j < this.workingPiece.dimension - 1; j++){
-            this.workingPiece.row = initialRow - j;
-            if (this.grid.valid(this.workingPiece)) {
-                this.actuate();
-                return;
-            }
-        }
-        this.workingPiece.row = initialRow;
-    }
-    this.workingPiece.column = initialCol;
-
-
-    this.workingPiece.rotate(3);
 };
+
+GameManager.prototype.rotate = function(){
+    var offset = this.grid.rotateOffset(this.workingPiece);
+    if (offset != null){
+        this.workingPiece.rotate(1);
+        this.workingPiece.row += offset.rowOffset;
+        this.workingPiece.column += offset.columnOffset;
+    }
+};
+
+GameManager.prototype.aiMove = function(){
+    this.workingPiece = this.ai.best(this.grid, this.workingPieces, 0).piece;
+};
+
+

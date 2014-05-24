@@ -1,47 +1,82 @@
-var PieceCells = [
-    [ // O
-        [1, 1],
-        [1, 1]
-    ],
-    [ // J
-        [1, 0, 0],
-        [1, 1, 1],
-        [0, 0, 0]
-    ],
-    [ // L
-        [0, 0, 1],
-        [1, 1, 1],
-        [0, 0, 0]
-    ],
-    [ // Z
-        [1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0]
-    ],
-    [ // S
-        [0, 1, 1],
-        [1, 1, 0],
-        [0, 0, 0]
-    ],
-    [ // T
-        [0, 1, 0],
-        [1, 1, 1],
-        [0, 0, 0]
-    ],
-    [// I
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ]
-];
-
 function Piece(cells){
     this.cells = cells;
 
     this.dimension = this.cells.length;
     this.row = 0;
     this.column = 0;
+};
+
+Piece.fromIndex = function(index){
+    var piece;
+    switch (index){
+        case 0:// O
+            piece = new Piece([
+                [1, 1],
+                [1, 1]
+            ]);
+            break;
+        case 1: // J
+            piece = new Piece([
+                [1, 0, 0],
+                [1, 1, 1],
+                [0, 0, 0]
+            ]);
+            break;
+        case 2: // L
+            piece = new Piece([
+                [0, 0, 1],
+                [1, 1, 1],
+                [0, 0, 0]
+            ]);
+        case 3: // Z
+            piece = new Piece([
+                [1, 1, 0],
+                [0, 1, 1],
+                [0, 0, 0]
+            ]);
+            break;
+        case 4: // S
+            piece = new Piece([
+                [0, 1, 1],
+                [1, 1, 0],
+                [0, 0, 0]
+            ]);
+            break;
+        case 5: // T
+            piece = new Piece([
+                [0, 1, 0],
+                [1, 1, 1],
+                [0, 0, 0]
+            ]);
+            break;
+        case 6: // I
+            piece = new Piece([
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0]
+            ]);
+            break;
+
+    }
+    piece.row = 0;
+    piece.column = Math.floor((10 - piece.dimension) / 2);
+    return piece;
+};
+
+Piece.prototype.clone = function(){
+    var _cells = new Array(this.dimension);
+    for (var r = 0; r < this.dimension; r++) {
+        _cells[r] = new Array(this.dimension);
+        for(var c = 0; c < this.dimension; c++){
+            _cells[r][c] = this.cells[r][c];
+        }
+    }
+
+    var piece = new Piece(_cells);
+    piece.row = this.row;
+    piece.column = this.column;
+    return piece;
 };
 
 Piece.prototype.rotate = function(rotations){

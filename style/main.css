@@ -71,7 +71,7 @@ hr
 
 .score-container::before
 {
-    content: "Score";
+    content: "Lines Cleared";
     width:100%;
     float:right;
     color: #CCCCCC;
