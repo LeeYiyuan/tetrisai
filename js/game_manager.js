@@ -3,7 +3,7 @@ function GameManager(){
     this.actuator = new Actuator();
     this.rpg = new RandomPieceGenerator();
     this.ai = new AI(0.0465458398684859,0.2214985086163506,0.9363426595530472,0.07156617472646758);
-    this.workingPieces = [this.rpg.nextPiece(), this.rpg.nextPiece(), this.rpg.nextPiece()];
+    this.workingPieces = [this.rpg.nextPiece(), this.rpg.nextPiece()];
     this.workingPiece = this.workingPieces[0];
 
     this.isOver = true;
