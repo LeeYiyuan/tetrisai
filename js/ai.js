@@ -29,7 +29,7 @@ AI.prototype.best = function(grid, workingPieces, workingPieceIndex){
 
             var score = null;
             if (workingPieceIndex == (workingPieces.length - 1)) {
-                score = -this.heightWeight * _grid.height() + this.linesWeight * _grid.lines() - this.holesWeight * _grid.holes() - this.bumpinessWeight * _grid.bumpiness();
+                score = -this.heightWeight * _grid.aggregateHeight() + this.linesWeight * _grid.lines() - this.holesWeight * _grid.holes() - this.bumpinessWeight * _grid.bumpiness();
             }else{
                 score = this.best(_grid, workingPieces, workingPieceIndex + 1).score;
             }

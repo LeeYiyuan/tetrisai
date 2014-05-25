@@ -13,7 +13,7 @@
         <canvas width="200px" height="400px" id="grid-canvas" class="grid"></canvas>
         <div class="controls-container">
             <div id="score-container" class="score-container">9999</div>
-            <a class="start-ai-button">Run AI</a>
+            <a id="ai-button" class="start-ai-button">Run AI</a>
             <a id="reset-button" class="reset-button">Reset</a>
         </div>
     </div>
@@ -26,12 +26,11 @@
 
 
 <script src="js/grid.js"></script>
-<script src="js/actuator.js"></script>
 <script src="js/piece.js"></script>
 <script src="js/game_manager.js"></script>
 <script src="js/random_piece_generator.js"></script>
-<script src="js/genetic_tuner.js"></script>
 <script src="js/ai.js"></script>
+<script src="js/updater.js"></script>
 <script>
     var manager = new GameManager();
     manager.actuate(manager.grid, manager.workingPiece);
