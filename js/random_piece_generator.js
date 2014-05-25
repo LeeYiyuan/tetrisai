@@ -1,5 +1,7 @@
 function RandomPieceGenerator(){
+    Math.seed
     this.bag = [0, 1, 2, 3, 4, 5, 6];
+    this.shuffleBag();
     this.index = -1;
 };
 

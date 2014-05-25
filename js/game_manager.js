@@ -93,14 +93,12 @@ GameManager.prototype.actuate = function(){
 
 GameManager.prototype.startAI = function(){
     this.aiActive = true;
-    this.aiButton.innerText = "Stop AI";
     this.aiButton.style.backgroundColor = "#e9e9ff";
     this.gravityUpdater.skipping = true;
 };
 
 GameManager.prototype.stopAI = function(){
     this.aiActive = false;
-    this.aiButton.innerText = "Start AI";
     this.aiButton.style.backgroundColor = "#f9f9f9";
     this.gravityUpdater.skipping = false;
 };
