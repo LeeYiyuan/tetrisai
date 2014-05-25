@@ -36,12 +36,10 @@ function GameManager(){
         }
     });
     this.aiButton.onclick = function(){
-        self.aiActive = !self.aiActive;
-        self.gravityUpdater.skipping = self.aiActive;
         if (self.aiActive){
-            self.aiButton.innerText = "Stop AI";
+            self.stopAI();
         }else{
-            self.aiButton.innerText = "Run AI";
+            self.startAI();
         }
     }
     this.resetButton.onclick = function(){
@@ -49,12 +47,11 @@ function GameManager(){
     }
 
     this.setup();
+    this.startAI();
     this.gravityUpdater.checkUpdate(Date.now());
 };
 
 GameManager.prototype.setup = function(){
-    this.aiButton.innerText = "Run AI";
-
     this.grid = new Grid(22, 10);
     this.rpg = new RandomPieceGenerator();
     this.ai = new AI(0.6656893691979349 , 0.9927492830902338 , 0.4654485417995602 , 0.2407724775839597);
@@ -63,9 +60,8 @@ GameManager.prototype.setup = function(){
 
     this.isOver = true;
     this.score = 0;
-    this.aiActive = false;
-    this.gravityUpdater.skipping = false;
 
+    this.stopAI();
     this.actuate();
 };
 
@@ -93,6 +89,20 @@ GameManager.prototype.actuate = function(){
 
     context.restore();
     this.scoreContainer.innerHTML = this.score.toString();
+};
+
+GameManager.prototype.startAI = function(){
+    this.aiActive = true;
+    this.aiButton.innerText = "Stop AI";
+    this.aiButton.style.backgroundColor = "#e9e9ff";
+    this.gravityUpdater.skipping = true;
+};
+
+GameManager.prototype.stopAI = function(){
+    this.aiActive = false;
+    this.aiButton.innerText = "Start AI";
+    this.aiButton.style.backgroundColor = "#f9f9f9";
+    this.gravityUpdater.skipping = false;
 };
 
 GameManager.prototype.setWorkingPiece = function(){
