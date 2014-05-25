@@ -3,6 +3,19 @@ function Updater(){
     this.deltaThreshold = 500;
     this.updateCallback = null;
     this.skipping = false;
+
+    window.requestAnimFrame = function(){ // Polyfill
+        return (
+            window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function(callback){
+                window.setTimeout(callback, 1000 / 60);
+            }
+            );
+    }();
 };
 
 Updater.prototype.onUpdate = function(callback){
@@ -25,7 +38,7 @@ Updater.prototype.checkUpdate = function(timestamp){
     }
 
 
-    window.requestAnimationFrame(function(){
+    window.requestAnimFrame(function(){
         self.checkUpdate(Date.now());
     });
 };
