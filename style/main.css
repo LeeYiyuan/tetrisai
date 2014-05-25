@@ -42,12 +42,14 @@ hr
 
 .grid
 {
-    width:200px;
-    height:400px;
     float:left;
     background-color: #FFFFFF;
     box-shadow: 0 0 10px 2px #EEEEEE;
     border:1px solid #CCCCCC;
+}
+
+.next-canvas
+{
 }
 
 .controls-container
@@ -74,7 +76,30 @@ hr
     content: "Lines Cleared";
     width:100%;
     float:right;
-    color: #CCCCCC;
+    color: #BBBBBB;
+    font-size:15px;
+    font-weight: normal;
+}
+
+.next-container
+{
+    background-color: #FFFFFF;
+    box-shadow: 0 0 10px 2px #EEEEEE;
+    text-align: center;
+    color: #FF0000;
+    font-size:25px;
+    border:1px solid #CCCCCC;
+    font-weight: bold;
+    padding:5px;
+    margin-top: 10px;
+}
+
+.next-container::before
+{
+    content: "Next Piece";
+    width:100%;
+    float:right;
+    color: #BBBBBB;
     font-size:15px;
     font-weight: normal;
 }

@@ -1,5 +1,6 @@
 function GameManager(){
-    this.gridCanvas = document.getElementById("grid-canvas");
+    this.gridCanvas = document.getElementById('grid-canvas');
+    this.nextCanvas = document.getElementById('next-canvas');
     this.scoreContainer = document.getElementById("score-container");
     this.resetButton = document.getElementById('reset-button');
     this.aiButton = document.getElementById('ai-button');
@@ -54,7 +55,7 @@ function GameManager(){
 GameManager.prototype.setup = function(){
     this.grid = new Grid(22, 10);
     this.rpg = new RandomPieceGenerator();
-    this.ai = new AI(0.6656893691979349 , 0.9927492830902338 , 0.4654485417995602 , 0.2407724775839597);
+    this.ai = new AI(0.66569 , 0.99275 , 0.46544 , 0.24077);
     this.workingPieces = [this.rpg.nextPiece(), this.rpg.nextPiece()];
     this.workingPiece = this.workingPieces[0];
 
@@ -72,10 +73,8 @@ GameManager.prototype.actuate = function(){
     }
 
     var context = this.gridCanvas.getContext('2d');
-
     context.save();
     context.clearRect(0, 0, this.gridCanvas.width, this.gridCanvas.height);
-
     for(var r = 2; r < _grid.rows; r++){
         for(var c = 0; c < _grid.columns; c++){
             if (_grid.cells[r][c] == 1){
@@ -86,8 +85,26 @@ GameManager.prototype.actuate = function(){
             }
         }
     }
-
     context.restore();
+
+    context = this.nextCanvas.getContext('2d');
+    context.save();
+    context.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+    var next = this.workingPieces[1];
+    var xOffset = next.dimension == 2 ? 20 : next.dimension == 3 ? 10 : next.dimension == 4 ? 0 : null;
+    var yOffset = next.dimension == 2 ? 20 : next.dimension == 3 ? 20 : next.dimension == 4 ? 10 : null;
+    for(var r = 0; r < next.dimension; r++){
+        for(var c = 0; c < next.dimension; c++){
+            if (next.cells[r][c] == 1){
+                context.fillStyle="#FF0000";
+                context.fillRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
+                context.strokeStyle="#FFFFFF";
+                context.strokeRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
+            }
+        }
+    }
+    context.restore();
+
     this.scoreContainer.innerHTML = this.score.toString();
 };
 
