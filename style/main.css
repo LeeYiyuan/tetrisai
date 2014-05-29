@@ -160,3 +160,10 @@ hr
     color:#000000;
     font-size: 12px;
 }
+
+.fb-share-button {
+    vertical-align: top;
+}
+.fb_iframe_widget span {
+    vertical-align: text-top !important;
+}
