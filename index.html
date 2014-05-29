@@ -6,6 +6,7 @@
     <link href="style/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div id="fb-root"></div>
 <div class="container">
     <h1 class="header">Tetris AI</h1>
 
@@ -23,8 +24,9 @@
     <hr>
     <div class="footer">
         <p>Created by <a href="http://codemyroad.wordpress.com" target="#">Lee Yiyuan</a>. To read about the AI, <a href="http://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/" target="#">Click here</a></p>
-        <hr>
-        <p>Share this on Twitter. <a href="https://twitter.com/share" class="twitter-share-button" data-url="leeyiyuan.github.io/tetrisai" data-via="LeeYiyuan">Tweet</a></p>
+
+       <a href="https://twitter.com/share" class="twitter-share-button" data-url="leeyiyuan.github.io/tetrisai" data-via="LeeYiyuan">Tweet</a>
+        <div class="fb-share-button" data-href="http://leeyiyuan.github.io/tetrisai" data-type="button_count"></div>
     </div>
 </div>
 
@@ -38,7 +40,13 @@
 <script>
     var manager = new GameManager();
     manager.actuate(manager.grid, manager.workingPiece);
-
 </script>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=142725279075499&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 </body>
 </html>
