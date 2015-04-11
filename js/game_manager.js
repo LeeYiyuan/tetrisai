@@ -55,7 +55,7 @@ function GameManager(){
 GameManager.prototype.setup = function(){
     this.grid = new Grid(22, 10);
     this.rpg = new RandomPieceGenerator();
-    this.ai = new AI(0.66569 , 0.99275 , 0.46544 , 0.24077);
+    this.ai = new AI(0.510066, 0.760666, 0.35663, 0.184483);
     this.workingPieces = [this.rpg.nextPiece(), this.rpg.nextPiece()];
     this.workingPiece = this.workingPieces[0];
 

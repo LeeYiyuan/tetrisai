@@ -60,7 +60,7 @@ Piece.fromIndex = function(index){
 
     }
     piece.row = 0;
-    piece.column = Math.floor((10 - piece.dimension) / 2);
+    piece.column = Math.floor((10 - piece.dimension) / 2); // Centralize
     return piece;
 };
 
