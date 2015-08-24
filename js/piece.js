@@ -28,6 +28,7 @@ Piece.fromIndex = function(index){
                 [1, 1, 1],
                 [0, 0, 0]
             ]);
+            break;
         case 3: // Z
             piece = new Piece([
                 [1, 1, 0],
