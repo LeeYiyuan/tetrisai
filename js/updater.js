@@ -14,7 +14,7 @@ function Updater(){
             function(callback){
                 window.setTimeout(callback, 1000 / 60);
             }
-            );
+        );
     }();
 };
 
@@ -36,7 +36,6 @@ Updater.prototype.checkUpdate = function(timestamp){
     if (this.skipping || delta > this.deltaThreshold){
         this.doUpdate(timestamp);
     }
-
 
     window.requestAnimFrame(function(){
         self.checkUpdate(Date.now());
