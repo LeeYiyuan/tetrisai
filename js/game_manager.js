@@ -14,6 +14,9 @@ function GameManager(){
 
     var self = this;
     document.addEventListener("keydown", function (event){
+        if(self.aiActive){
+            return;
+        }
         switch(event.which){
             case 32: //drop
                 self.drop();
@@ -177,5 +180,3 @@ GameManager.prototype.rotate = function(){
 GameManager.prototype.aiMove = function(){
     this.workingPiece = this.ai.best(this.grid, this.workingPieces, 0).piece;
 };
-
-
