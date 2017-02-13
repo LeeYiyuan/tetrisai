@@ -71,7 +71,7 @@ function GameManager(){
 
             score += grid.clearLines();
             updateScoreContainer();
-            
+
             if (!grid.exceeded()){
                 for(var i = 0; i < workingPieces.length - 1; i++){
                     workingPieces[i] = workingPieces[i + 1];
