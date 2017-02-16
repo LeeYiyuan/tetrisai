@@ -15,6 +15,10 @@ function GameManager(){
     var gravityTimer = new Timer(onGravityTimerTick, 1000 / 60);
     var score = 0;
 
+    function intToRGBHexString(v){
+        return 'rgb(' + ((v >> 16) & 0xFF) + ',' + ((v >> 8) & 0xFF) + ',' + (v & 0xFF) + ')';
+    }
+
     function updateGridCanvas(){
         var _grid = grid.clone();
         if (workingPiece != null) {
@@ -26,8 +30,8 @@ function GameManager(){
         context.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
         for(var r = 2; r < _grid.rows; r++){
             for(var c = 0; c < _grid.columns; c++){
-                if (_grid.cells[r][c] == 1){
-                    context.fillStyle="#FF0000";
+                if (_grid.cells[r][c] != 0){
+                    context.fillStyle= intToRGBHexString(_grid.cells[r][c]);
                     context.fillRect(20 * c, 20 * (r - 2), 20, 20);
                     context.strokeStyle="#FFFFFF";
                     context.strokeRect(20 * c, 20 * (r - 2), 20, 20);
@@ -46,10 +50,10 @@ function GameManager(){
         var yOffset = next.dimension == 2 ? 20 : next.dimension == 3 ? 20 : next.dimension == 4 ? 10 : null;
         for(var r = 0; r < next.dimension; r++){
             for(var c = 0; c < next.dimension; c++){
-                if (next.cells[r][c] == 1){
-                    context.fillStyle="#FF0000";
+                if (next.cells[r][c] != 0){
+                    context.fillStyle = intToRGBHexString(next.cells[r][c]);
                     context.fillRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
-                    context.strokeStyle="#FFFFFF";
+                    context.strokeStyle = "#FFFFFF";
                     context.strokeRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
                 }
             }
