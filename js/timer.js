@@ -1,6 +1,6 @@
 function Timer(callback, delay) {
-    var animationFrame = null;
     var lastUpdate = null;
+    var isRunning = false;
 
     var requestAnimFrame = (function(){
         return  window.requestAnimationFrame       ||
@@ -13,50 +13,46 @@ function Timer(callback, delay) {
             };
     })();
 
-    var cancelRequestAnimFrame = (function() {
-        return window.cancelAnimationFrame          ||
-            window.webkitCancelRequestAnimationFrame    ||
-            window.mozCancelRequestAnimationFrame       ||
-            window.oCancelRequestAnimationFrame     ||
-            window.msCancelRequestAnimationFrame        ||
-            clearTimeout;
-    })();
-
     var loop = function(){
-        animationFrame = requestAnimFrame(function(){
+        requestAnimFrame(function(){
             var now = Date.now();
-            var elapsed = now - lastUpdate;
-            if(elapsed > delay){
-                callback();
-                lastUpdate = now - (elapsed % delay);
+            if(!isRunning){
+                lastUpdate = now;
+                loop();
+            }else{
+                var elapsed = now - lastUpdate;
+                if(lastUpdate === null || elapsed > delay){
+                    callback();
+                    lastUpdate = now - (elapsed % delay);
+                }
+                loop();
             }
-            loop();
         });
     };
 
     this.start = function() {
-        this.stop();
+        if(isRunning){
+            return;
+        }
         lastUpdate = Date.now();
-        loop();
+        isRunning = true;
     }
 
     this.stop = function() {
-        if(animationFrame !== null){
-            cancelRequestAnimFrame(animationFrame);
-            animationFrame = null;
-        }
+        isRunning = false;
     }
 
     this.reset = function(newDelay) {
-        this.stop();
-        delay = newDelay;
+        lastUpdate = Date.now();
         this.start();
     }
 
     this.resetForward = function(newDelay){
-        this.stop();
         callback();
         delay = newDelay;
+        lastUpdate = Date.now();
         this.start();
     }
+
+    loop();
 }
