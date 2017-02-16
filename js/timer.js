@@ -2,8 +2,28 @@ function Timer(callback, delay) {
     var animationFrame = null;
     var lastUpdate = null;
 
+    var requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function(callback){
+                return window.setTimeout(callback, 1000 / 60);
+            };
+    })();
+
+    var cancelRequestAnimFrame = (function() {
+        return window.cancelAnimationFrame          ||
+            window.webkitCancelRequestAnimationFrame    ||
+            window.mozCancelRequestAnimationFrame       ||
+            window.oCancelRequestAnimationFrame     ||
+            window.msCancelRequestAnimationFrame        ||
+            clearTimeout;
+    })();
+
     var loop = function(){
-        animationFrame = requestAnimationFrame(function(){
+        animationFrame = requestAnimFrame(function(){
             var now = Date.now();
             var elapsed = now - lastUpdate;
             if(elapsed > delay){
@@ -22,7 +42,7 @@ function Timer(callback, delay) {
 
     this.stop = function() {
         if(animationFrame !== null){
-            cancelAnimationFrame(animationFrame);
+            cancelRequestAnimFrame(animationFrame);
             animationFrame = null;
         }
     }
@@ -40,26 +60,3 @@ function Timer(callback, delay) {
         this.start();
     }
 }
-
-Timer.prototype.requestAnimationFrame = (function(){
-    return
-        window.requestAnimationFrame       ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        window.oRequestAnimationFrame      ||
-        window.msRequestAnimationFrame     ||
-        function(callback){
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
-
-Timer.prototype.cancelAnimationFrame = (function(){
-    return
-        window.cancelAnimationFrame ||
-        window.mozCancelAnimationFrame ||
-        window.webkitCancelAnimationFrame ||
-        window.msCancelAnimationFrame ||
-        function(animationFrame){
-            window.clearTimeout(animationFrame);
-        };
-})();

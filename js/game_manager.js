@@ -93,7 +93,6 @@ function GameManager(){
             updateNextCanvas();
         }else{
             gravityTimer.stop();
-            alert("Game Over!");
         }
     }
 
