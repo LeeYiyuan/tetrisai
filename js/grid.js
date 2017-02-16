@@ -1,4 +1,3 @@
-// Constructor
 function Grid(rows, columns){
     this.rows = rows;
     this.columns = columns;
@@ -12,7 +11,6 @@ function Grid(rows, columns){
     }
 };
 
-// Methods
 Grid.prototype.clone = function(){
     var _grid = new Grid(this.rows, this.columns);
     for (var r = 0; r < this.rows; r++) {
@@ -159,95 +157,4 @@ Grid.prototype.valid = function(piece){
         }
     }
     return true;
-};
-
-Grid.prototype.canMoveDown = function(piece){
-    for(var r = 0; r < piece.cells.length; r++){
-        for(var c = 0; c < piece.cells[r].length; c++){
-            var _r = piece.row + r + 1;
-            var _c = piece.column + c;
-            if (piece.cells[r][c] == 1 && _r >= 0){
-                if (!(_r < this.rows && this.cells[_r][_c] == 0)){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-};
-
-Grid.prototype.canMoveLeft = function(piece){
-    for(var r = 0; r < piece.cells.length; r++){
-        for(var c = 0; c < piece.cells[r].length; c++){
-            var _r = piece.row + r;
-            var _c = piece.column + c - 1;
-            if (piece.cells[r][c] == 1){
-                if (!(_c >= 0 && this.cells[_r][_c] == 0)){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-};
-
-Grid.prototype.canMoveRight = function(piece){
-    for(var r = 0; r < piece.cells.length; r++){
-        for(var c = 0; c < piece.cells[r].length; c++){
-            var _r = piece.row + r;
-            var _c = piece.column + c + 1;
-            if (piece.cells[r][c] == 1){
-                if (!(_c >= 0 && this.cells[_r][_c] == 0)){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-};
-
-Grid.prototype.rotateOffset = function(piece){
-    var _piece = piece.clone();
-    _piece.rotate(1);
-    if (this.valid(_piece)) {
-        return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
-    }
-
-    // Kicking
-    var initialRow = _piece.row;
-    var initialCol = _piece.column;
-
-    for (var i = 0; i < _piece.dimension - 1; i++) {
-        _piece.column = initialCol + i;
-        if (this.valid(_piece)) {
-            return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
-        }
-
-        for (var j = 0; j < _piece.dimension - 1; j++) {
-            _piece.row = initialRow - j;
-            if (this.valid(_piece)) {
-                return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
-            }
-        }
-        _piece.row = initialRow;
-    }
-    _piece.column = initialCol;
-
-    for (var i = 0; i < _piece.dimension - 1; i++) {
-        _piece.column = initialCol - i;
-        if (this.valid(_piece)) {
-            return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
-        }
-
-        for (var j = 0; j < _piece.dimension - 1; j++) {
-            _piece.row = initialRow - j;
-            if (this.valid(_piece)) {
-                return {rowOffset: _piece.row - piece.row, columnOffset:_piece.column - piece.column};
-            }
-        }
-        _piece.row = initialRow;
-    }
-    _piece.column = initialCol;
-
-    return null;
 };

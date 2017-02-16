@@ -62,34 +62,34 @@ function GameManager(){
     }
 
     function onGravityTimerTick(){
-        if (grid.canMoveDown(workingPiece)) {
-            workingPiece.row++;
+        if (workingPiece.moveDown(grid)) {
             updateGridCanvas();
-        }else{
-            grid.addPiece(workingPiece);
-            updateGridCanvas();
+            return;
+        }
 
-            score += grid.clearLines();
-            updateScoreContainer();
+        grid.addPiece(workingPiece);
+        updateGridCanvas();
 
-            if (!grid.exceeded()){
-                for(var i = 0; i < workingPieces.length - 1; i++){
-                    workingPieces[i] = workingPieces[i + 1];
-                }
-                workingPieces[workingPieces.length - 1] = rpg.nextPiece();
-                workingPiece = workingPieces[0];
-                if(isAiActive){
-                    workingPiece = ai.best(grid, workingPieces, 0).piece;
-                    gravityTimer.reset(1000 / 60);
-                }else{
-                    workingPiece = workingPieces[0];
-                    gravityTimer.resetForward(500);
-                }
-                updateNextCanvas();
-            }else{
-                gravityTimer.stop();
-                alert("Game Over!");
+        score += grid.clearLines();
+        updateScoreContainer();
+
+        if (!grid.exceeded()){
+            for(var i = 0; i < workingPieces.length - 1; i++){
+                workingPieces[i] = workingPieces[i + 1];
             }
+            workingPieces[workingPieces.length - 1] = rpg.nextPiece();
+            workingPiece = workingPieces[0];
+            if(isAiActive){
+                workingPiece = ai.best(grid, workingPieces, 0).piece;
+                gravityTimer.reset(1000 / 60);
+            }else{
+                workingPiece = workingPieces[0];
+                gravityTimer.resetForward(500);
+            }
+            updateNextCanvas();
+        }else{
+            gravityTimer.stop();
+            alert("Game Over!");
         }
     }
 
@@ -105,24 +105,17 @@ function GameManager(){
                 gravityTimer.resetForward(500);
                 break;
             case 37: //left
-                if (grid.canMoveLeft(workingPiece)){
-                    workingPiece.column--;
+                if (workingPiece.moveLeft(grid)){
+                    updateGridCanvas();
                 }
-                updateGridCanvas();
                 break;
             case 39: //right
-                if (grid.canMoveRight(workingPiece)){
-                    workingPiece.column++;
+                if (workingPiece.moveRight(grid)){
+                    updateGridCanvas();
                 }
-                updateGridCanvas();
                 break;
             case 38: //up
-                var offset = grid.rotateOffset(workingPiece);
-                if (offset != null){
-                    workingPiece.rotate(1);
-                    workingPiece.row += offset.rowOffset;
-                    workingPiece.column += offset.columnOffset;
-                }
+                workingPiece.rotate(grid);
                 updateGridCanvas();
                 break;
         }

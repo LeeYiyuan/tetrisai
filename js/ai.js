@@ -12,17 +12,15 @@ AI.prototype.best = function(grid, workingPieces, workingPieceIndex){
 
     for(var rotation = 0; rotation < 4; rotation++){
         var _piece = workingPiece.clone();
-        _piece.rotate(rotation);
-
-        while(grid.canMoveLeft(_piece)){
-            _piece.column --;
+        for(var i = 0; i < rotation; i++){
+            _piece.rotate(grid);
         }
+
+        while(_piece.moveLeft(grid));
 
         while(grid.valid(_piece)){
             var _pieceSet = _piece.clone();
-            while(grid.canMoveDown(_pieceSet)){
-                _pieceSet.row++;
-            }
+            while(_pieceSet.moveDown(grid));
 
             var _grid = grid.clone();
             _grid.addPiece(_pieceSet);
