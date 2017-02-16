@@ -188,6 +188,8 @@ function GameManager(){
         workingPieces = [rpg.nextPiece(), rpg.nextPiece()];
         workingPiece = workingPieces[0];
         score = 0;
+        clearGridCanvas();
+        redrawNextCanvas();
         gravityTimer.resetForward(isAiActive ? 1000 / 60 : 500);
     }
 
