@@ -80,7 +80,7 @@ function GameManager(){
             workingPieces[workingPieces.length - 1] = rpg.nextPiece();
             workingPiece = workingPieces[0];
             if(isAiActive){
-                workingPiece = ai.best(grid, workingPieces, 0).piece;
+                workingPiece = ai.best(grid, workingPieces);
                 gravityTimer.reset(1000 / 60);
             }else{
                 workingPiece = workingPieces[0];

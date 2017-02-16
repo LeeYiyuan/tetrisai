@@ -5,7 +5,7 @@ function AI(heightWeight, linesWeight, holesWeight, bumpinessWeight){
     this.bumpinessWeight = bumpinessWeight;
 };
 
-AI.prototype.best = function(grid, workingPieces, workingPieceIndex){
+AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
     var best = null;
     var bestScore = null;
     var workingPiece = workingPieces[workingPieceIndex];
@@ -29,7 +29,7 @@ AI.prototype.best = function(grid, workingPieces, workingPieceIndex){
             if (workingPieceIndex == (workingPieces.length - 1)) {
                 score = -this.heightWeight * _grid.aggregateHeight() + this.linesWeight * _grid.lines() - this.holesWeight * _grid.holes() - this.bumpinessWeight * _grid.bumpiness();
             }else{
-                score = this.best(_grid, workingPieces, workingPieceIndex + 1).score;
+                score = this._best(_grid, workingPieces, workingPieceIndex + 1).score;
             }
 
             if (score > bestScore || bestScore == null){
@@ -42,4 +42,8 @@ AI.prototype.best = function(grid, workingPieces, workingPieceIndex){
     }
 
     return {piece:best, score:bestScore};
+};
+
+AI.prototype.best = function(grid, workingPieces){
+    return this._best(grid, workingPieces, 0).piece;
 };
