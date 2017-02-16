@@ -4,7 +4,8 @@ function GameManager(){
     var scoreContainer = document.getElementById("score-container");
     var resetButton = document.getElementById('reset-button');
     var aiButton = document.getElementById('ai-button');
-    var context = gridCanvas.getContext('2d');
+    var gridContext = gridCanvas.getContext('2d');
+    var nextContext = nextCanvas.getContext('2d');
     document.addEventListener('keydown', onKeyDown);
 
     var grid = new Grid(22, 10);
@@ -21,80 +22,80 @@ function GameManager(){
     }
 
     function clearGridCanvas(){
-        context.save();
+        gridContext.save();
 
-        context.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        gridContext.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
 
-        context.restore();
+        gridContext.restore();
     }
 
     function drawGridCanvas(){
-        context.save();
+        gridContext.save();
 
         for(var r = 2; r < grid.rows; r++){
             for(var c = 0; c < grid.columns; c++){
                 if (grid.cells[r][c] != 0){
-                    context.fillStyle= intToRGBHexString(grid.cells[r][c]);
-                    context.fillRect(20 * c, 20 * (r - 2), 20, 20);
-                    context.strokeStyle="#FFFFFF";
-                    context.strokeRect(20 * c, 20 * (r - 2), 20, 20);
+                    gridContext.fillStyle= intToRGBHexString(grid.cells[r][c]);
+                    gridContext.fillRect(20 * c, 20 * (r - 2), 20, 20);
+                    gridContext.strokeStyle="#FFFFFF";
+                    gridContext.strokeRect(20 * c, 20 * (r - 2), 20, 20);
                 }
             }
         }
 
-        context.restore();
+        gridContext.restore();
     }
 
     function drawWorkingPiece(){
-        context.save();
+        gridContext.save();
 
         for(var r = 0; r < workingPiece.dimension; r++){
             for(var c = 0; c < workingPiece.dimension; c++){
                 if (workingPiece.cells[r][c] != 0 && (r + workingPiece.row) >= 2){
-                    context.fillStyle = intToRGBHexString(workingPiece.cells[r][c]);
-                    context.fillRect(20 * (c + workingPiece.column), 20 * ((r + workingPiece.row) - 2), 20, 20);
-                    context.strokeStyle="#FFFFFF";
-                    context.strokeRect(20 * (c + workingPiece.column), 20 * ((r + workingPiece.row) - 2), 20, 20);
+                    gridContext.fillStyle = intToRGBHexString(workingPiece.cells[r][c]);
+                    gridContext.fillRect(20 * (c + workingPiece.column), 20 * ((r + workingPiece.row) - 2), 20, 20);
+                    gridContext.strokeStyle="#FFFFFF";
+                    gridContext.strokeRect(20 * (c + workingPiece.column), 20 * ((r + workingPiece.row) - 2), 20, 20);
                 }
             }
         }
 
-        context.restore();
+        gridContext.restore();
     }
 
     function undrawWorkingPiece(){
-        context.save();
+        gridContext.save();
 
         for(var r = 0; r < workingPiece.dimension; r++){
             for(var c = 0; c < workingPiece.dimension; c++){
                 if (workingPiece.cells[r][c] != 0 && (r + workingPiece.row) >= 2){
-                    context.fillStyle = '#FFFFFF';
+                    gridContext.clearRect(20 * (c + workingPiece.column), 20 * ((r + workingPiece.row) - 2), 20, 20);
                 }
             }
         }
 
-        context.restore();
+        gridContext.restore();
     }
 
     function redrawNextCanvas(){
-        context.save();
+        nextContext.save();
 
-        context.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+        nextContext.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
         var next = workingPieces[1];
         var xOffset = next.dimension == 2 ? 20 : next.dimension == 3 ? 10 : next.dimension == 4 ? 0 : null;
         var yOffset = next.dimension == 2 ? 20 : next.dimension == 3 ? 20 : next.dimension == 4 ? 10 : null;
         for(var r = 0; r < next.dimension; r++){
             for(var c = 0; c < next.dimension; c++){
                 if (next.cells[r][c] != 0){
-                    context.fillStyle = intToRGBHexString(next.cells[r][c]);
-                    context.fillRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
-                    context.strokeStyle = "#FFFFFF";
-                    context.strokeRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
+                    nextContext.fillStyle = intToRGBHexString(next.cells[r][c]);
+                    nextContext.fillRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
+                    nextContext.strokeStyle = "#FFFFFF";
+                    nextContext.strokeRect(xOffset + 20 * c, yOffset + 20 * r, 20, 20);
                 }
             }
         }
 
-        context.restore();
+        nextContext.restore();
     }
 
     function updateScoreContainer(){
@@ -131,7 +132,7 @@ function GameManager(){
             redrawNextCanvas();
         }else{
             gravityTimer.stop();
-            console.log('Game over!');
+            alert('Game over!');
         }
     }
 
