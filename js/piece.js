@@ -11,49 +11,49 @@ Piece.fromIndex = function(index){
     switch (index){
         case 0:// O
             piece = new Piece([
-                [0xffff00, 0xffff00],
-                [0xffff00, 0xffff00]
+                [0x0000AA, 0x0000AA],
+                [0x0000AA, 0x0000AA]
             ]);
             break;
         case 1: // J
             piece = new Piece([
-                [0x0000ff, 0x000000, 0x000000],
-                [0x0000ff, 0x0000ff, 0x0000ff],
+                [0xC0C0C0, 0x000000, 0x000000],
+                [0xC0C0C0, 0xC0C0C0, 0xC0C0C0],
                 [0x000000, 0x000000, 0x000000]
             ]);
             break;
         case 2: // L
             piece = new Piece([
-                [0x000000, 0x000000, 0xffa500],
-                [0xffa500, 0xffa500, 0xffa500],
+                [0x000000, 0x000000, 0xAA00AA],
+                [0xAA00AA, 0xAA00AA, 0xAA00AA],
                 [0x000000, 0x000000, 0x000000]
             ]);
             break;
         case 3: // Z
             piece = new Piece([
-                [0xff0000, 0xff0000, 0x000000],
-                [0x000000, 0xff0000, 0xff0000],
+                [0x00AAAA, 0x00AAAA, 0x000000],
+                [0x000000, 0x00AAAA, 0x00AAAA],
                 [0x000000, 0x000000, 0x000000]
             ]);
             break;
         case 4: // S
             piece = new Piece([
-                [0x000000, 0x80FF00, 0x80FF00],
-                [0x80FF00, 0x80FF00, 0x000000],
+                [0x000000, 0x00AA00, 0x00AA00],
+                [0x00AA00, 0x00AA00, 0x000000],
                 [0x000000, 0x000000, 0x000000]
             ]);
             break;
         case 5: // T
             piece = new Piece([
-                [0x000000, 0x800080, 0x000000],
-                [0x800080, 0x800080, 0x800080],
+                [0x000000, 0xAA5500, 0x000000],
+                [0xAA5500, 0xAA5500, 0xAA5500],
                 [0x000000, 0x000000, 0x000000]
             ]);
             break;
         case 6: // I
             piece = new Piece([
                 [0x000000, 0x000000, 0x000000, 0x000000],
-                [0x00FFFF, 0x00FFFF, 0x00FFFF, 0x00FFFF],
+                [0xAA0000, 0xAA0000, 0xAA0000, 0xAA0000],
                 [0x000000, 0x000000, 0x000000, 0x000000],
                 [0x000000, 0x000000, 0x000000, 0x000000]
             ]);
