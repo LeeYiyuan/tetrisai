@@ -40,7 +40,6 @@ Grid.prototype.clearLines = function(){
     return distance;
 };
 
-// Computations
 Grid.prototype.isLine = function(row){
     for(var c = 0; c < this.columns; c++){
         if (this.cells[row][c] == 0){
@@ -131,7 +130,6 @@ Grid.prototype.columnHeight = function(column){
     return this.rows - r;
 };
 
-// Piece
 Grid.prototype.addPiece = function(piece) {
     for(var r = 0; r < piece.cells.length; r++) {
         for (var c = 0; c < piece.cells[r].length; c++) {
