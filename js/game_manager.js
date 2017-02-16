@@ -148,5 +148,6 @@ function GameManager(){
     }
 
     aiButton.style.backgroundColor = "#e9e9ff";
+    updateNextCanvas();
     gravityTimer.start();
 };
