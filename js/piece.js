@@ -85,7 +85,7 @@ Piece.prototype.canMoveLeft = function(grid){
         for(var c = 0; c < this.cells[r].length; c++){
             var _r = this.row + r;
             var _c = this.column + c - 1;
-            if (this.cells[r][c] == 1){
+            if (this.cells[r][c] != 0){
                 if (!(_c >= 0 && grid.cells[_r][_c] == 0)){
                     return false;
                 }
@@ -100,7 +100,7 @@ Piece.prototype.canMoveRight = function(grid){
         for(var c = 0; c < this.cells[r].length; c++){
             var _r = this.row + r;
             var _c = this.column + c + 1;
-            if (this.cells[r][c] == 1){
+            if (this.cells[r][c] != 0){
                 if (!(_c >= 0 && grid.cells[_r][_c] == 0)){
                     return false;
                 }
@@ -116,7 +116,7 @@ Piece.prototype.canMoveDown = function(grid){
         for(var c = 0; c < this.cells[r].length; c++){
             var _r = this.row + r + 1;
             var _c = this.column + c;
-            if (this.cells[r][c] == 1 && _r >= 0){
+            if (this.cells[r][c] != 0 && _r >= 0){
                 if (!(_r < grid.rows && grid.cells[_r][_c] == 0)){
                     return false;
                 }

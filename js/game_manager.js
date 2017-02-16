@@ -98,10 +98,10 @@ function GameManager(){
             return;
         }
         switch(event.which){
-            case 32: //drop
+            case 32: // spacebar
                 gravityTimer.resetForward(1000 / 60);
                 break;
-            case 40: //down
+            case 40: // down
                 gravityTimer.resetForward(500);
                 break;
             case 37: //left
@@ -142,7 +142,6 @@ function GameManager(){
         score = 0;
         gravityTimer.resetForward(isAiActive ? 1000 / 60 : 500);
     }
-
 
     aiButton.style.backgroundColor = "#e9e9ff";
     gravityTimer.start();
