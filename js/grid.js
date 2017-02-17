@@ -154,7 +154,7 @@ Grid.prototype.valid = function(piece){
                 if(_c < 0 || _c >= this.columns){
                     return false;
                 }
-                if (!(_c < this.columns && _r < this.rows && this.cells[_r][_c] == 0)){
+                if (this.cells[_r][_c] != 0){
                     return false;
                 }
             }
