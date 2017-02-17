@@ -196,4 +196,4 @@ function GameManager(){
     aiButton.style.backgroundColor = "#e9e9ff";
     redrawNextCanvas();
     gravityTimer.start();
-};
+}
