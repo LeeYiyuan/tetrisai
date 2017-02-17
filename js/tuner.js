@@ -120,57 +120,13 @@ function Tuner(){
         sort(candidates);
     }
 
-
-    /*
-        Population size = 1000
-        Rounds per candidate = 100
-        Max moves per round = 500
-    */
-    this.tuneSlow = function(){
-        var candidates = [];
-
-        // Initial population generation
-        for(var i = 0; i < 1000; i++){
-            candidates.push(generateRandomCandidate());
-        }
-
-        console.log('Computing fitnesses of initial population...');
-        computeFitnesses(candidates, 100, 500);
-        sort(candidates);
-
-        var count = 0;
-        while(true){
-            var newCandidates = [];
-            for(var i = 0; i < 300; i++){ // 30% of population
-                var pair = tournamentSelectPair(candidates, 100); // 10% of population
-                //console.log('fitnesses = ' + pair[0].fitness + ',' + pair[1].fitness);
-                var candidate = crossOver(pair[0], pair[1]);
-                if(Math.random() < 0.05){// 5% chance of mutation
-                    mutate(candidate);
-                }
-                normalize(candidate);
-                newCandidates.push(candidate);
-            }
-            console.log('Computing fitnesses of new candidates. (' + count + ')');
-            computeFitnesses(newCandidates, 100, 500);
-            deleteNLastReplacement(candidates, newCandidates);
-            var totalFitness = 0;
-            for(var i = 0; i < candidates.length; i++){
-                totalFitness += candidates[i].fitness;
-            }
-            console.log('Average fitness = ' + (totalFitness / candidates.length));
-            console.log('Highest fitness = ' + candidates[0].fitness + '(' + count + ')');
-            console.log('Fittest candidate = ' + JSON.stringify(candidates[0]) + '(' + count + ')');
-            count++;
-        }
-    };
-
     /*
         Population size = 100
         Rounds per candidate = 5
         Max moves per round = 200
+        Theoretical fitness limit = 5 * 200 * 4 / 10 = 400
     */
-    this.tuneFast = function(){
+    this.tune = function(){
         var candidates = [];
 
         // Initial population generation
