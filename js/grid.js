@@ -147,13 +147,13 @@ Grid.prototype.valid = function(piece){
         for(var c = 0; c < piece.cells[r].length; c++){
             var _r = piece.row + r;
             var _c = piece.column + c;
-            if(_r < 0 || _r >= this.rows){
-                return false;
-            }
-            if(_c < 0 || _c >= this.columns){
-                return false;
-            }
             if (piece.cells[r][c] != 0){
+                if(_r < 0 || _r >= this.rows){
+                    return false;
+                }
+                if(_c < 0 || _c >= this.columns){
+                    return false;
+                }
                 if (!(_c < this.columns && _r < this.rows && this.cells[_r][_c] == 0)){
                     return false;
                 }
