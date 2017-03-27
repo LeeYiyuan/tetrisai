@@ -27,17 +27,18 @@ function Timer(callback, delay) {
         if(animationFrame === null){
             return;
         }
-        cancelAnimationFrame(animationFrame);
         animationFrame = null;
     }
 
     this.reset = function(newDelay) {
         self.stop();
+        delay = newDelay;
         self.start();
     }
 
     this.resetForward = function(newDelay){
         self.stop();
+        delay = newDelay;
         callback();
         self.start();
     }
