@@ -174,6 +174,7 @@ function GameManager(){
         // If working piece has reached bottom, end of turn has been processed
         // and game cannot continue because grid has been exceeded
         if(!endTurn()){
+            isKeyEnabled = false;
             alert('Game Over!');
             return;
         }
@@ -252,6 +253,7 @@ function GameManager(){
         workingPieces = [null, rpg.nextPiece()];
         workingPiece = null;
         score = 0;
+        isKeyEnabled = true;
         updateScoreContainer();
         startTurn();
     }
