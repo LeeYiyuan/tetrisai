@@ -1,58 +1,44 @@
 function Timer(callback, delay) {
+    var animationFrame = null;
     var lastUpdate = null;
-    var isRunning = false;
-
-    var requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function(callback){
-                return window.setTimeout(callback, 1000 / 60);
-            };
-    })();
+    var self = this;
 
     var loop = function(){
-        requestAnimFrame(function(){
+        animationFrame = requestAnimationFrame(function(){
             var now = Date.now();
-            if(!isRunning){
-                lastUpdate = now;
-                loop();
-            }else{
-                var elapsed = now - lastUpdate;
-                if(lastUpdate === null || elapsed > delay){
-                    callback();
-                    lastUpdate = now - (elapsed % delay);
-                }
-                loop();
+            var elapsed = now - lastUpdate;
+            if(lastUpdate === null || elapsed > delay){
+                callback();
+                lastUpdate = now - (elapsed % delay);
             }
+            loop();
         });
     };
 
     this.start = function() {
-        if(isRunning){
+        if(animationFrame !== null){
             return;
         }
         lastUpdate = Date.now();
-        isRunning = true;
+        loop();
     }
 
     this.stop = function() {
-        isRunning = false;
+        if(animationFrame === null){
+            return;
+        }
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
     }
 
     this.reset = function(newDelay) {
-        lastUpdate = Date.now();
-        this.start();
+        self.stop();
+        self.start();
     }
 
     this.resetForward = function(newDelay){
+        self.stop();
         callback();
-        delay = newDelay;
-        lastUpdate = Date.now();
-        this.start();
+        self.start();
     }
-
-    loop();
 }
