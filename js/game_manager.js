@@ -252,6 +252,7 @@ function GameManager(){
         workingPieces = [null, rpg.nextPiece()];
         workingPiece = null;
         score = 0;
+        updateScoreContainer();
         startTurn();
     }
 
