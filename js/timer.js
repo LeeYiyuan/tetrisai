@@ -27,6 +27,7 @@ function Timer(callback, delay) {
         if(animationFrame === null){
             return;
         }
+        cancelAnimationFrame(animationFrame);
         animationFrame = null;
     }
 

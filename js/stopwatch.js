@@ -1,46 +1,29 @@
-function Stopwatch() {
-    animationFrame = null;
+function Timer(callback) {
+    var animationFrame = null;
+    var startDate = null;
+    var self = this;
 
     var loop = function(){
-        requestAnimFrame(function(){
+        animationFrame = requestAnimationFrame(function(){
             var now = Date.now();
-            if(!isRunning){
-                lastUpdate = now;
-                loop();
-            }else{
-                var elapsed = now - lastUpdate;
-                if(lastUpdate === null || elapsed > delay){
-                    callback();
-                    lastUpdate = now - (elapsed % delay);
-                }
-                loop();
-            }
+            var elapsed = now - startDate;
+            callback(elapsed);
+            loop();
         });
     };
 
     this.start = function() {
-        if(isRunning){
+        if(animationFrame !== null){
             return;
         }
-        lastUpdate = Date.now();
-        isRunning = true;
+        startDate = Date.now();
+        loop();
     }
 
     this.stop = function() {
-        isRunning = false;
+        if(animationFrame === null){
+            return;
+        }
+        animationFrame = null;
     }
-
-    this.reset = function(newDelay) {
-        lastUpdate = Date.now();
-        this.start();
-    }
-
-    this.resetForward = function(newDelay){
-        callback();
-        delay = newDelay;
-        lastUpdate = Date.now();
-        this.start();
-    }
-
-    loop();
 }
