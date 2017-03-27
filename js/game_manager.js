@@ -93,15 +93,17 @@ function GameManager(){
         }
 
         var stopwatch = new Stopwatch(function(elapsed){
-            if(elapsed >= animationHeight * 15){
+            if(elapsed >= animationHeight * 20){
                 stopwatch.stop();
                 redrawGridCanvas(20 * animationHeight);
                 callback();
                 return;
             }
 
-            redrawGridCanvas(20 * elapsed / 15);
+            redrawGridCanvas(20 * elapsed / 20);
         });
+
+        workingPieceDropAnimationStopwatch = stopwatch;
     }
 
     function cancelWorkingPieceDropAnimation(){
@@ -243,17 +245,14 @@ function GameManager(){
     }
 
     resetButton.onclick = function(){
-        /*
         gravityTimer.stop();
+        cancelWorkingPieceDropAnimation();
         grid = new Grid(22, 10);
         rpg = new RandomPieceGenerator();
-        workingPieces = [rpg.nextPiece(), rpg.nextPiece()];
-        workingPiece = workingPieces[0];
+        workingPieces = [null, rpg.nextPiece()];
+        workingPiece = null;
         score = 0;
-        clearGridCanvas();
-        redrawNextCanvas();
-        gravityTimer.resetForward(isAiActive ? 1000 / 60 : 500);
-        */
+        startTurn();
     }
 
     aiButton.style.backgroundColor = "#e9e9ff";
