@@ -1,46 +1,47 @@
 function Timer(callback, delay) {
-    var animationFrame = null;
     var lastUpdate = null;
-    var self = this;
+    var isRunning = false;
 
     var loop = function(){
-        animationFrame = requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
             var now = Date.now();
-            var elapsed = now - lastUpdate;
-            if(lastUpdate === null || elapsed > delay){
-                callback();
-                lastUpdate = now - (elapsed % delay);
+            if(!isRunning){
+                lastUpdate = now;
+                loop();
+            }else{
+                var elapsed = now - lastUpdate;
+                if(lastUpdate === null || elapsed > delay){
+                    callback();
+                    lastUpdate = now - (elapsed % delay);
+                }
+                loop();
             }
-            loop();
         });
     };
 
     this.start = function() {
-        if(animationFrame !== null){
+        if(isRunning){
             return;
         }
         lastUpdate = Date.now();
-        loop();
+        isRunning = true;
     }
 
     this.stop = function() {
-        if(animationFrame === null){
-            return;
-        }
-        cancelAnimationFrame(animationFrame);
-        animationFrame = null;
+        isRunning = false;
     }
 
     this.reset = function(newDelay) {
-        self.stop();
-        delay = newDelay;
-        self.start();
+        lastUpdate = Date.now();
+        this.start();
     }
 
     this.resetForward = function(newDelay){
-        self.stop();
-        delay = newDelay;
         callback();
-        self.start();
+        delay = newDelay;
+        lastUpdate = Date.now();
+        this.start();
     }
+
+    loop();
 }
