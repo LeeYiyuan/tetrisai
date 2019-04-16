@@ -113,7 +113,7 @@ function Tuner(){
     }
 
     function deleteNLastReplacement(candidates, newCandidates){
-        candidates.slice(-newCandidates.length);
+        candidates.splice(-newCandidates.length);
         for(var i = 0; i < newCandidates.length; i++){
             candidates.push(newCandidates[i]);
         }
