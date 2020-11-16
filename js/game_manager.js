@@ -10,7 +10,12 @@ function GameManager(){
 
     var grid = new Grid(22, 10);
     var rpg = new RandomPieceGenerator();
-    var ai = new AI(0.510066, 0.760666, 0.35663, 0.184483);
+    var ai = new AI({
+        heightWeight: 0.510066,
+        linesWeight: 0.760666,
+        holesWeight: 0.35663,
+        bumpinessWeight: 0.184483
+    });
     var workingPieces = [null, rpg.nextPiece()];
     var workingPiece = null;
     var isAiActive = true;

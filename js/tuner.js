@@ -31,7 +31,7 @@ function Tuner(){
     function computeFitnesses(candidates, numberOfGames, maxNumberOfMoves){
         for(var i = 0; i < candidates.length; i++){
             var candidate = candidates[i];
-            var ai = new AI(candidate.heightWeight, candidate.linesWeight, candidate.holesWeight, candidate.bumpinessWeight);
+            var ai = new AI(candidate);
             var totalScore = 0;
             for(var j = 0; j < numberOfGames; j++){
                 var grid = new Grid(22, 10);
@@ -70,17 +70,17 @@ function Tuner(){
             ones picked.
         */
         var fittestCandidateIndex1 = null;
-        var fittestCanddiateIndex2 = null;
+        var fittestCandidateIndex2 = null;
         for(var i = 0; i < ways; i++){
             var selectedIndex = indices.splice(randomInteger(0, indices.length), 1)[0];
             if(fittestCandidateIndex1 === null || selectedIndex < fittestCandidateIndex1){
-                fittestCanddiateIndex2 = fittestCandidateIndex1;
+                fittestCandidateIndex2 = fittestCandidateIndex1;
                 fittestCandidateIndex1 = selectedIndex;
-            }else if (fittestCanddiateIndex2 === null || selectedIndex < fittestCanddiateIndex2){
-                fittestCanddiateIndex2 = selectedIndex;
+            }else if (fittestCandidateIndex2 === null || selectedIndex < fittestCandidateIndex2){
+                fittestCandidateIndex2 = selectedIndex;
             }
         }
-        return [candidates[fittestCandidateIndex1], candidates[fittestCanddiateIndex2]];
+        return [candidates[fittestCandidateIndex1], candidates[fittestCandidateIndex2]];
     }
 
     function crossOver(candidate1, candidate2){
@@ -120,22 +120,29 @@ function Tuner(){
         sort(candidates);
     }
 
-    /*
-        Population size = 100
-        Rounds per candidate = 5
-        Max moves per round = 200
-        Theoretical fitness limit = 5 * 200 * 4 / 10 = 400
-    */
-    this.tune = function(){
+    /**
+     * @param {Object} [params]
+     * @param {number} [params.population=100] Population size
+     * @param {number} [params.rounds=5] Rounds per candidate
+     * @param {number} [params.moves=200] Max moves per round
+     */
+    this.tune = function(params){
+        var config = Object.assign({}, params, {
+            // Defaults:
+            // Theoretical fitness limit = 5 * 200 * 4 / 10 = 400
+            population: 100,
+            rounds: 5,
+            moves: 200
+        });
         var candidates = [];
 
         // Initial population generation
-        for(var i = 0; i < 100; i++){
+        for(var i = 0; i < config.population; i++){
             candidates.push(generateRandomCandidate());
         }
 
         console.log('Computing fitnesses of initial population...');
-        computeFitnesses(candidates, 5, 200);
+        computeFitnesses(candidates, config.rounds, config.moves);
         sort(candidates);
 
         var count = 0;
@@ -152,7 +159,7 @@ function Tuner(){
                 newCandidates.push(candidate);
             }
             console.log('Computing fitnesses of new candidates. (' + count + ')');
-            computeFitnesses(newCandidates, 5, 200);
+            computeFitnesses(newCandidates, config.rounds, config.moves);
             deleteNLastReplacement(candidates, newCandidates);
             var totalFitness = 0;
             for(var i = 0; i < candidates.length; i++){
