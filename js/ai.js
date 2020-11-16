@@ -1,8 +1,15 @@
-function AI(heightWeight, linesWeight, holesWeight, bumpinessWeight){
-    this.heightWeight = heightWeight;
-    this.linesWeight = linesWeight;
-    this.holesWeight = holesWeight;
-    this.bumpinessWeight = bumpinessWeight;
+/**
+ * @param {Object} weights
+ * @param {number} weights.heightWeight
+ * @param {number} weights.linesWeight
+ * @param {number} weights.holesWeight
+ * @param {number} weights.bumpinessWeight
+ */
+function AI(weights){
+    this.heightWeight = weights.heightWeight;
+    this.linesWeight = weights.linesWeight;
+    this.holesWeight = weights.holesWeight;
+    this.bumpinessWeight = weights.bumpinessWeight;
 };
 
 AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
